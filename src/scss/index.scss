@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600&display=swap');
+$blackColor: #000;
+$whiteColor: #f2f2f2;
+$prinkColor: #c60b5c;
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: $blackColor;
+  color: $whiteColor;
+}
+
+.fa-ethereum{
+  font-size: 1.3rem;
+}
+
+.fa-sync{
+  font-size: 1.3rem;
+  padding: 0.7rem;
+  border: 2px solid #303030;
+  border-radius: 50px;
+  margin-top: 1rem;
+  transition: all 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.fa-sync:hover{
+  transform: rotate(360deg);
+}
+
+.navbar h5, nav p{
+  font-weight: bold;
+}
+
+.navbar h5{
+  color: $prinkColor !important;
+}
+
+.custom-btn{
+  font-weight: 500 !important;
+  background-color: $prinkColor;
+  transition: all 0.3s ease-in-out;
+}
+
+.custom-btn:disabled{
+  background: none !important;
+}
+
+.custom-btn:hover{
+  background: none !important;
+  border: 1px solid $whiteColor;
+}
+
+.dex-container{
+  width: 100%;
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.heading{
+  color: $prinkColor;
+  margin-bottom: 3.5rem;
+}
+.dex-container form{
+  width: 95%;
+  max-width: 30rem;
+  padding: 3rem;
+  border: 1px solid #303030;
+  border-radius: 10px;
+}
+
+input{
+  background: none !important;
+  color: $whiteColor !important;
+  font-weight: 500 !important;
+}

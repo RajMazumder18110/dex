@@ -1,24 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import { Container } from "reactstrap";
+import DEXtoETH from "./components/DEXtoETH";
+import ETHtoDEX from "./components/ETHtoDEX";
+import NavBar from "./components/Navbar";
+import { DEXContext } from "./contexts/dexContext";
+
+import './scss/index.scss';
 
 function App() {
+  const [walletConnected, setWalletConnected] = useState(false);
+  const [account, setAccount] = useState('x0hd8s-xxx-9hs8e2s')
+  const [active, setActive] = useState('ETHtoDEX');
+  const [swapEthValue, setSwapEthValue] = useState(0);
+  const [swapDexValue, setSwapDexValue] = useState(0);
+
+  const handleWalletConnection = () => {
+    setWalletConnected(true);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <DEXContext.Provider value={{
+      walletConnected, setWalletConnected,
+      active, setActive,
+      swapEthValue, setSwapEthValue,
+      swapDexValue, setSwapDexValue,
+      handleWalletConnection, account
+    }}>
+      <Container>
+        <NavBar />
+        { active === 'ETHtoDEX' ? <ETHtoDEX /> : <DEXtoETH /> }
+      </Container>
+    </DEXContext.Provider>
   );
 }
 
