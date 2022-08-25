@@ -37,41 +37,11 @@ contract("Decentralize Exchange", accounts => {
         })
 
         describe("Miniting Token", () => {
-            const supply = ethers.utils.parseEther('100000').toString();
+            const supply = ethers.utils.parseEther('10000000').toString();
 
-            it('Should return initial DEXToken balance of DEX as 0', async () => {
+            it('Should return initial DEXToken balance of DEX as 1Cr', async () => {
                 result = (await dexToken.balanceOf(dex.address)).toString();
-                expect(result).to.be.equal('0');
-            })
-
-            describe('-Success', () => {
-                it('Should mint 1,00,000 token to DEX while sender is owner', async () => {
-                    await dexToken.mintDEXToken(supply)
-                    result = (await dexToken.balanceOf(dex.address)).toString()
-                    result = ethers.utils.formatUnits(result, 'ether');
-                    result = Number(result);
-                    expect(result).to.be.equal(100000);
-                })
-            })
-
-            describe('-Faliour', () => {
-                it('Should revert minting token while sender is not owner', async () => {
-                    try{
-                        await dexToken.mintDEXToken(supply, {
-                            from: accounts[1]
-                        })
-                    }catch(e){
-                        expect(revertedWithMsg(e, "OnlyOwner: Only owner can access this function."))
-                    }
-                })
-
-                it('Should revert miniting token while supply is zero', async () => {
-                    try{
-                        await dexToken.mintDEXToken(0);
-                    }catch(e){
-                        expect(revertedWithMsg(e, "SupplyMoreThanZero: Supply is zero."))
-                    }
-                })
+                expect(result).to.be.equal(supply);
             })
         })
     })
@@ -188,7 +158,7 @@ contract("Decentralize Exchange", accounts => {
 
                     result = (await dexToken.balanceOf(dex.address)).toString();
                     result = Number(ethers.utils.formatUnits(result, 'ether'));
-                    expect(result).to.be.equal(85_000);
+                    expect(result).to.be.equal(99_85_000);
                 })
 
                 it('Should return the correct amount of DEXToken owned by the account 1', async () => {
@@ -230,7 +200,7 @@ contract("Decentralize Exchange", accounts => {
 
                     result = (await dexToken.balanceOf(dex.address)).toString();
                     result = Number(ethers.utils.formatUnits(result, 'ether'));
-                    expect(result).to.be.equal(1_00_000);
+                    expect(result).to.be.equal(1_00_00_000);
                 })
             })
 

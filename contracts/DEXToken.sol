@@ -39,17 +39,19 @@ contract DEXToken is ERC20 {
     constructor(
         string memory _name,
         string memory _symbol,
-        address _dexAddress
+        address _dexAddress,
+        uint256 _initialSupply
     ) ERC20(_name, _symbol){
         dexAddress = _dexAddress;
         owner = msg.sender;
+        mintDEXToken(_initialSupply);
     }
 
     /**
      * @dev Minting the token to DEX contract with initial supply.
      * @param _initialSupply: The initial supply of that token.
      */
-    function mintDEXToken(uint _initialSupply) external
+    function mintDEXToken(uint _initialSupply) private
         OnlyOwner SupplyMoreThanZero(_initialSupply) {
         _mint(dexAddress, _initialSupply);
     }

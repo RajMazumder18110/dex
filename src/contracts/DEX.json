@@ -10053,6 +10053,44 @@
       "address": "0xA2Df7C45db1377BB95e31BbA2F56729493422A7e",
       "transactionHash": "0x0ab297ea921693127ca8aae001fc7b4b36969bfe3cbdb28631f7e849fd7ab4cf"
     },
+    "80001": {
+      "events": {
+        "0x998db19d1e1862382f8a2644e3c399121b4ec6dcae1a42dd4034c30fca3fe32b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "internalType": "address",
+              "name": "walletAddress",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "ethValue",
+              "type": "uint256"
+            },
+            {
+              "indexed": true,
+              "internalType": "uint256",
+              "name": "dexValue",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "bool",
+              "name": "toDex",
+              "type": "bool"
+            }
+          ],
+          "name": "TokenSwapped",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x87FB7f3e7229c2035Cb0ebD3e06927c4235a5bd7",
+      "transactionHash": "0xc11a5e58add1ad3c21bd8fa540ac7e56e944b34493546046b230e412bc5b5985"
+    },
     "1661268907870": {
       "events": {},
       "links": {},
@@ -10067,7 +10105,7 @@
     }
   },
   "schemaVersion": "3.4.8",
-  "updatedAt": "2022-08-25T15:35:18.683Z",
+  "updatedAt": "2022-08-25T17:49:54.591Z",
   "networkType": "ethereum",
   "devdoc": {
     "events": {
