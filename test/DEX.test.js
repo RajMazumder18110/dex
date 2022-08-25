@@ -171,12 +171,20 @@ contract("Decentralize Exchange", accounts => {
         describe('Swapping ETH with DEX', () => {
             // 1 ether + 0.0003 exchange fee
             const exchangeFee = ethers.utils.parseEther('1.0003').toString();
+            const ethValue = ethers.utils.parseEther('1').toString();
+            const dexValue = ethers.utils.parseEther('15000').toString();
 
             describe('Success', () => {
                 it('Should swap the DEX token with ETH', async () => {
-                    await dex.swapETHWithDEXToken(dexToken.address, {
+                    result = await dex.swapETHWithDEXToken(dexToken.address, {
                         value: exchangeFee 
                     });
+
+                    expect(result.logs[0].event).to.be.equal('TokenSwapped');
+                    expect(result.logs[0].args.walletAddress).to.be.equal(accounts[0]);
+                    expect(result.logs[0].args.ethValue.toString()).to.be.equal(ethValue);
+                    expect(result.logs[0].args.dexValue.toString()).to.be.equal(dexValue);
+                    expect(result.logs[0].args.toDex);
 
                     result = (await dexToken.balanceOf(dex.address)).toString();
                     result = Number(ethers.utils.formatUnits(result, 'ether'));
@@ -204,13 +212,21 @@ contract("Decentralize Exchange", accounts => {
         describe('Swapping DEX with ETH', () => {
             const exchangeFee = ethers.utils.parseEther('0.0003').toString();
             const exchangeToken = ethers.utils.parseEther('15000').toString();
+            const ethValue = ethers.utils.parseEther('0.9997').toString();
 
             describe('-Success', () => {
                 it('Should swap the DEX token with ETH', async () => {
                     await dexToken.approve(dex.address, exchangeToken);
-                    await dex.swapDEXTokenWithETH(dexToken.address, exchangeToken, {
+                    result = await dex.swapDEXTokenWithETH(dexToken.address, exchangeToken, {
                         value: exchangeFee
                     })
+
+                    expect(result.logs[0].event).to.be.equal('TokenSwapped');
+                    expect(result.logs[0].args.walletAddress).to.be.equal(accounts[0]);
+                    expect(result.logs[0].args.ethValue.toString()).to.be.equal(ethValue);
+                    expect(result.logs[0].args.dexValue.toString()).to.be.equal(exchangeToken);
+                    expect(!result.logs[0].args.toDex);
+
 
                     result = (await dexToken.balanceOf(dex.address)).toString();
                     result = Number(ethers.utils.formatUnits(result, 'ether'));

@@ -71,9 +71,23 @@ contract DEX is ReentrancyGuard {
      */
     modifier DEXTokenAvailableInSender(address _dexTokenAddress, uint256 _tokenAmount){
         uint256 ownerBalance = IERC20(_dexTokenAddress).balanceOf(address(msg.sender));
-        require(_tokenAmount >= ownerBalance, "DEXTokenAvailableInSender: DEX token is not available.");
+        require(_tokenAmount <= ownerBalance, "DEXTokenAvailableInSender: DEX token is not available.");
         _;
     }
+
+    /**
+     * @dev Event to keep track of swapped values.
+     * @param walletAddress: The address who swapped.
+     * @param ethValue: The ethereum value.
+     * @param dexValue: The DEX token value.
+     * @param toDex: Boolean value to check whether address swapped eth with dex
+     */
+    event TokenSwapped(
+        address indexed walletAddress,
+        uint256 indexed ethValue,
+        uint256 indexed dexValue,
+        bool toDex
+    );
 
     /**
      * @dev Assigning the contract deployer to owner.
@@ -117,6 +131,7 @@ contract DEX is ReentrancyGuard {
         uint256 tokenToSend = (msg.value - exchangeFee) * dexTokenExchangeRate;
         collectedFees += exchangeFee;
         IERC20(_dexTokenContractAddress).transfer(msg.sender, tokenToSend);
+        emit TokenSwapped(msg.sender, msg.value - exchangeFee, tokenToSend, true);
     }
 
     /**
@@ -131,5 +146,6 @@ contract DEX is ReentrancyGuard {
         collectedFees += exchangeFee;
         IERC20(_dexTokenContractAddress).transferFrom(msg.sender, address(this), _tokenAmount);
         payable(msg.sender).transfer(ethToSend);
+        emit TokenSwapped(msg.sender, ethToSend, _tokenAmount, false);
     }
 }

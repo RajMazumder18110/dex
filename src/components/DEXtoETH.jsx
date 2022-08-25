@@ -1,20 +1,54 @@
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import { Container, Form, FormGroup, Label ,Input, Button } from "reactstrap";
 import { DEXContext } from "../contexts/dexContext";
+import { ethers } from "ethers";
 
 const DEXtoETH = () => {
     const { setActive, walletConnected, handleWalletConnection,
-        swapDexValue, swapEthValue, setSwapDexValue, setSwapEthValue 
+        swapDexValue, swapEthValue, setSwapDexValue, setSwapEthValue,
+        dex, dexToken, account, exchangeFee, dexRate, ethBalance
     } = useContext(DEXContext);
+    const [dexBalance, setDexBalance] = useState('');
+    const [fetched, setFetched] = useState(true);
+    const setFetchedValue = () => setFetched(!fetched);
 
     const handelInput = (e) => {
         setSwapDexValue(Number(e.target.value));
-        setSwapEthValue(Number(e.target.value) / 10_000)
+        setSwapEthValue(Number(e.target.value) / dexRate)
     }
 
-    const handelSubmit = (e) => {
+    const handelSubmit = async (e) => {
         e.preventDefault()
+        if(swapDexValue > 0){
+            try{
+                const fee = ethers.utils.parseEther(String(exchangeFee));
+                const dexTokenValue = ethers.utils.parseEther(String(swapDexValue)).toString();
+                
+                let tx = await dexToken.approve(dex.address, dexTokenValue);
+                await tx.wait();
+
+                tx = await dex.swapDEXTokenWithETH(dexToken.address, dexTokenValue, {
+                    value: fee
+                })
+                await tx.wait();
+                setFetchedValue();
+                alert('Token Swapped');
+            }catch(e){
+                alert("Error occured while transaction")
+            }
+        }else{
+            alert('ETH value should be more than zero')
+        }
     }
+
+    useEffect(() => {
+        const get = async () => {
+            let bal = (await dexToken.balanceOf(account)).toString();
+            bal = ethers.utils.formatUnits(bal, 'ether').toString();
+            setDexBalance(bal);
+        }
+        walletConnected && get()
+    }, [fetched, walletConnected])
 
     return (
         <Container className="dex-container">
@@ -28,11 +62,11 @@ const DEXtoETH = () => {
                         marginBottom: 0
                     }}>
                         <div>
-                            <i class="fas fa-project-diagram me-2"></i>DEX
+                            <i className="fas fa-project-diagram me-2"></i>DEX
                         </div>
                         <p className="text-muted" style={{
                             fontSize: '0.8rem'
-                        }}>Balance : 15,000 DEX</p>
+                        }}>Balance : {dexBalance} DEX</p>
                     </Label>
                     <Input
                         type='number'
@@ -44,7 +78,7 @@ const DEXtoETH = () => {
                         valid={swapDexValue > 0}
                     />
                 </FormGroup>
-                    <i class="fas fa-sync" onClick={() => setActive('ETHtoDEX')}></i>
+                    <i className="fas fa-sync" onClick={() => setActive('ETHtoDEX')}></i>
                 <FormGroup>
 
                 </FormGroup>
@@ -57,11 +91,11 @@ const DEXtoETH = () => {
                         marginBottom: 0
                     }}>
                         <div>
-                            <i class="fa-brands fa-ethereum me-2"></i>ETH
+                            <i className="fa-brands fa-ethereum me-2"></i>ETH
                         </div>
                         <p className="text-muted" style={{
                             fontSize: '0.8rem'
-                        }}>Balance : 99.09 ETH</p>
+                        }}>Balance : {ethBalance} ETH</p>
                     </Label>
                     <Input
                         type='number'
@@ -70,6 +104,7 @@ const DEXtoETH = () => {
                         id="ethValue"
                         value={swapEthValue}
                         valid={swapDexValue > 0}
+                        readOnly
                     />
                     <Label style={{
                         fontWeight: 'bold',
@@ -84,7 +119,7 @@ const DEXtoETH = () => {
                             }}>Exchange rate</p>
                             <p className="text-muted" style={{
                                 fontSize: '0.8rem'
-                            }}>10,000 DEX = 1 ETH</p>
+                            }}>{dexRate} DEX = 1 ETH</p>
                         </div>
                         <div className="d-flex" style={{ justifyContent: 'space-between'}}>
                             <p className="text-muted" style={{
@@ -92,7 +127,7 @@ const DEXtoETH = () => {
                             }}>Exchange fee</p>
                             <p className="text-muted" style={{
                                 fontSize: '0.8rem'
-                            }}><i class="fa-brands fa-ethereum me-2"></i>0.0003</p>
+                            }}><i className="fa-brands fa-ethereum me-2"></i>{exchangeFee}</p>
                         </div>
                     </Label>
                 </FormGroup>

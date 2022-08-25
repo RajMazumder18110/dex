@@ -8,5 +8,5 @@ module.exports = async (deployer) => {
     await deployer.deploy(DEX);
     const dex = await DEX.deployed();
 
-    await deployer.deploy(DEXToken, name, symbol, dex.address);
+    await deployer.deploy(DEXToken, name, symbol, dex.address);  
 }

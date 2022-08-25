@@ -12,7 +12,9 @@ const NavBar = () => {
                 {walletConnected ?
                     <p className="text-muted d-flex" style={{
                         alignItems: 'center'
-                    }}><i class="fa-brands fa-ethereum me-2"></i>{account}</p>
+                    }}><i className="fa-brands fa-ethereum me-2"></i>
+                    {account.replace(account.substring(6,36), '-xxx-')}
+                    </p>
                     :
                     <Button className="px-4 custom-btn"
                         onClick={handleWalletConnection}
