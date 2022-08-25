@@ -22,12 +22,15 @@ const App = () => {
   const [exchangeFee, setExchangeFee] = useState(0);
   const [dexRate, setDexRate] = useState(0);
   const [ethBalance, setEthBalance] = useState(0);
+  const [lastData, setLastData] = useState({})
+
+  let provider;
 
   const handleWalletConnection = async () => {
     try{
       if(typeof window.ethereum !== 'undefined'){
         const accounts = await window.ethereum.request({ method:'eth_requestAccounts' });
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        provider = new ethers.providers.Web3Provider(window.ethereum);
         const signer = provider.getSigner();
         const { chainId } = await provider.getNetwork();
 
@@ -52,6 +55,7 @@ const App = () => {
         alert('Please install metamask :(')
       }
     }catch(e){
+      alert('Error occured');
       console.log(e);
     }
   }
@@ -64,6 +68,16 @@ const App = () => {
 
   useEffect(() => {
     const init = async () => {
+      dex.on('TokenSwapped', (walletAddress, ethValue, dexValue, toDex) => {
+        const data = {
+          walletAddress,
+          toDex,
+          ethValue: ethers.utils.formatUnits(ethValue.toString(), 'ether').toString(),
+          dexValue: ethers.utils.formatUnits(dexValue.toString(), 'ether').toString()
+        }
+        setLastData(data);
+      })
+
       let ef = await dex.exchangeFee();
       ef = ethers.utils.formatUnits(ef.toString(), 'ether').toString();
       setExchangeFee(ef);
@@ -81,7 +95,8 @@ const App = () => {
       swapEthValue, setSwapEthValue,
       swapDexValue, setSwapDexValue,
       handleWalletConnection, account,
-      dex, dexToken, exchangeFee, dexRate, ethBalance
+      dex, dexToken, exchangeFee, dexRate, ethBalance,
+      lastData
     }}>
       <Container>
         <NavBar />

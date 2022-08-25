@@ -2,11 +2,12 @@ import { ethers } from "ethers";
 import { useContext, useEffect, useState } from "react";
 import { Container, Form, FormGroup, Label ,Input, Button } from "reactstrap";
 import { DEXContext } from "../contexts/dexContext";
+import LastSwapped from "./LastSwapped";
 
 const ETHtoDEX = () => {
     const { setActive, walletConnected, handleWalletConnection,
         swapEthValue, swapDexValue, setSwapEthValue,  setSwapDexValue,
-        dex, dexToken, account, exchangeFee, dexRate, ethBalance
+        dex, dexToken, account, exchangeFee, dexRate, ethBalance, lastData
     } = useContext(DEXContext);
 
     const [dexBalance, setDexBalance] = useState('');
@@ -138,6 +139,7 @@ const ETHtoDEX = () => {
                     }
                 </FormGroup>
             </Form>
+            <LastSwapped lastData={lastData}/>
         </Container>
     )
 }
